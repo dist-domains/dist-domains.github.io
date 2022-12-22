@@ -89,9 +89,15 @@ const App = (props) => {
                 network = { name: "none" };
                 statusElement = <NotConnected onClickConnect={connect} />;
             } else {
-                contractDomain = new web3.eth.Contract(distDomainAbi, network.domainAddress);
-                contractRegistrar = new web3.eth.Contract(distRegistrarAbi, network.registrarAddress);
-                contractTlds = new web3.eth.Contract(distTldAbi, network.tldAddress);
+                try {
+                    contractDomain = new web3.eth.Contract(distDomainAbi, network.domainAddress);
+                    contractRegistrar = new web3.eth.Contract(distRegistrarAbi, network.registrarAddress);
+                    contractTlds = new web3.eth.Contract(distTldAbi, network.tldAddress);
+                } catch (e) {
+                    console.error(e);
+                    network = { name: "none" };
+                    statusElement = <UnsupportedNetwork chainId={chainId} />;
+                }
             }
         }
     } else {
